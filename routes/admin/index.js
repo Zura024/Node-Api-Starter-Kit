@@ -37,13 +37,10 @@ router.post('/generate-fake-posts', (req, res) => {
             allowComments:true
         });
 
-        newPost.save().then(post=>{
-            console.log(post);
-        }).catch(err=>{
-            console.log(err);
-        });
+        newPost.save().then(post=>{})
     }
-    res.send('coool');
+
+    res.render('admin/index');
 });
 
 router.get('/dashboard', (req, res) => {
@@ -82,17 +79,13 @@ router.post('/comments', (req, res)=>{
 
 router.delete('/comments/:id', (req, res)=>{
 
+    const promises = [
+        Comment.remove({_id: req.params.id}).exec(),
+        Post.findOneAndUpdate({comments: req.params.id}, {$pull: {comments: req.params.id}}).exec()
+    ];
 
-    Comment.remove({_id: req.params.id}).then(deleteItem=>{
-
-        Post.findOneAndUpdate({comments: req.params.id}, {$pull: {comments: req.params.id}}, (err, data)=>{
-
-            if(err) console.log(err);
-
-            res.redirect('/admin/comments');
-
-        });
-
+    Promise.all(promises).then(([result,err,data])=>{
+        res.redirect('/admin/comments');
     });
 
 });

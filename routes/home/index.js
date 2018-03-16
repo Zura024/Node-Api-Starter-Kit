@@ -17,28 +17,21 @@ router.get('/', (req, res) => {
     const perPage = 10;
     const page = req.query.page || 1;
 
-    Post.find({})
-        .skip((perPage * page) - perPage)
-        .limit(perPage)
+    const promises = [
+        Post.find({}).skip((perPage * page) - perPage).limit(perPage).exec(),
+        Post.count().exec(),
+        Category.find({}).exec(),
+    ];
 
-        .then(posts=>{
-            Post.count().then(postCount=>{
-                Category.find({}).then(categories=>{
-
-                    res.render('home/index',
-                        {
-                            posts : posts,
-                            categories : categories,
-                            current : parseInt(page),
-                            pages: Math.ceil(postCount/perPage)
-                        });
-
-                }).catch(err=>{
-
-                    res.render('home/index');
-                });
+    Promise.all(promises).then(([posts,postCount,categories])=>{
+        res.render('home/index',
+            {
+                posts : posts,
+                categories : categories,
+                current : parseInt(page),
+                pages: Math.ceil(postCount/perPage)
             });
-    })
+    });
 });
 
 router.get('/post/:slug', (req, res) => {
@@ -47,7 +40,6 @@ router.get('/post/:slug', (req, res) => {
         .populate({path : 'comments', match:{ approveComment:true}, populate : {path:'user' , model :'users' }})
         .populate('user')
         .then(post=>{
-            console.log(post);
         res.render('home/post',{post : post});
     }).catch(err=>{
 

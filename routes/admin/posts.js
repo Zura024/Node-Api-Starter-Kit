@@ -29,21 +29,23 @@ router.get('/my-posts', (req, res) => {
 });
 
 router.get('/edit/:id', (req, res) => {
-    let id = req.params.id;
-    Post.findOne({_id:id}).then(post=>{
-        Category.find({}).then(categories=>{
-            res.render('admin/posts/edit',{post : post,categories:categories});
-        })
+    let promises = [
+        Post.findOne({_id:req.params.id}).exec(),
+        Category.find({}).exec(),
+    ];
+
+    Promise.all(promises).then(([post,categories])=>{
+        res.render('admin/posts/edit',{post : post,categories:categories});
     }).catch(err=>{
 
     });
+
 });
 
 router.put('/edit/:id', (req, res) => {
+    const allowComments = !!req.body.allowComments;
 
-    let id = req.params.id;
-    let allowComments = !!req.body.allowComments;
-    Post.findOne({_id:id}).then(post=>{
+    Post.findOne({_id:req.params.id}).then(post=>{
         post.title=req.body.title;
         post.body=req.body.body;
         post.status=req.body.status;
@@ -73,10 +75,13 @@ router.put('/edit/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     let id = req.params.id;
 
-    Post.findOne({_id:id}).then(post=>{
+    const promise = [
+        Post.findOne({_id:id}).exec(),
+        Comment.deleteMany({post:id}).exec()
+    ];
 
+    Promise.all(promise).then(([post,result])=>{
         post.remove().then(result=>{
-            console.log('deleted');
             req.flash('success_message', `Post Deleted successfully `);
             res.redirect('/admin/posts')
         }).catch(err=>{
@@ -88,12 +93,12 @@ router.delete('/:id', (req, res) => {
                 });
             }
         });
+    }).catch(err=>{
 
-        Comment.deleteMany({post:id}).then(result=>{
-            console.log(result);
-        }).catch(err=>{
-            console.log(err);
-        });
+    });
+
+    Post.findOne({_id:id}).then(post=>{
+
 
     }).catch(err=>{
 

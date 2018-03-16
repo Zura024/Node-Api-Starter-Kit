@@ -53,7 +53,6 @@ router.put('/edit/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     let id = req.params.id;
     Category.remove({_id:id}).then(category=>{
-        console.log(category);
         req.flash('success_message', `Category Deleted successfully `);
         res.redirect('/admin/categories')
     }).catch(err=>{

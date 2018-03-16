@@ -12,8 +12,6 @@ module.exports = {
     },
 
     paginate: function (options) {
-        console.log(options.hash.current);
-        console.log(options.hash.pages);
         let output = '';
         if (options.hash.current === 1){
             output += `<li class="page-item disabled"><a class="page-link"> First</a></li>`;
