@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const home = require('./routes/home/index');
+const auth = require('./routes/auth/auth');
 const admin = require('./routes/admin/index');
 const posts = require('./routes/admin/posts');
 const categories = require('./routes/admin/categories');
@@ -57,6 +58,7 @@ app.use((req,res,next)=>{
 });
 
 app.use('/', home);
+app.use('/auth', auth);
 app.use('/admin', admin);
 app.use('/admin/posts', posts);
 app.use('/admin/categories', categories);
