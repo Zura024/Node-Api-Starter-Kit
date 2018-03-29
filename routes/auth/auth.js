@@ -39,7 +39,7 @@ passport.use(new JWTStrategy({
         secretOrKey   : 'jwt_secret'
     },
     function (jwtPayload, cb) {
-
+        console.log(jwtPayload);
         //find the user in db if needed
         return User.findOne({id:jwtPayload.__id})
             .then(user => {
@@ -59,9 +59,13 @@ router.post('/login', (req, res,next) => {
             if (err || !user){
                 return res.json({code : 1});
             }
-
-            const token = jwt.sign(user.toObject(),'jwt_secret');
-            return res.json({user, token});
+            req.login(user, {session: false}, (err) => {
+                if (err) {
+                    res.send(err);
+                }
+                const token = jwt.sign(user.toObject(),'jwt_secret',{expiresIn: '30m'});
+                return res.json({user, token});
+            });
         }
     )(req,res,next);
 });
