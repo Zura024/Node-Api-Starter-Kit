@@ -32,7 +32,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "rand-token": "^0.4.0"
+    "rand-token": "^0.4.0",
+    "supertest": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "^5.0.4"
