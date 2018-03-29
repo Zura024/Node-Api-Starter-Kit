@@ -32,6 +32,9 @@ router.get('/test', (req, res) => {
     });
 });
 
+/**
+ * end test
+ */
 
 router.get('/my-posts', (req, res) => {
     Post.find({user:req.user.id}).populate('category').then(posts=>{

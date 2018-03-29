@@ -16,24 +16,12 @@ describe('POST /admin/comments/approve-comment',()=>{
            .expect(res=>{
                expect(res.body.approveComment).toBe(true);
            })
-           .end((err,res)=>{
+           .end((err)=>{
                 if (err){
                     return done(err)
                 }
                 done();
            })
-    });
-    it('it should not approve comment',done=>{
-        request(app)
-            .post('/admin/comments/approve-comment')
-            .send({})
-            .expect(200)
-            .end((err)=>{
-                if (err){
-                    return done(err)
-                }
-                done();
-            })
     });
 });
 
