@@ -36,3 +36,21 @@ describe('POST /admin/comments/approve-comment',()=>{
             })
     });
 });
+
+describe('GET /admin/posts',()=>{
+    it('it should get all posts',done=>{
+        request(app)
+            .get('/admin/posts/test')
+            .expect(200)
+            .expect(res=>{
+                let test =  res.body.posts.length > 0;
+                expect(test).toBe(true);
+            })
+            .end((err,res)=>{
+                if (err){
+                    return done(err)
+                }
+                done();
+            })
+    });
+});

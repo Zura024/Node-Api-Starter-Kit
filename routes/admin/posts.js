@@ -20,6 +20,19 @@ router.get('/', (req, res) => {
     });
 });
 
+/**
+ * for test
+ */
+router.get('/test', (req, res) => {
+    Post.find({}).populate('category').then(posts=>{
+        //res.render('admin/posts',{posts : posts});
+        res.send({posts : posts});
+    }).catch(err=>{
+
+    });
+});
+
+
 router.get('/my-posts', (req, res) => {
     Post.find({user:req.user.id}).populate('category').then(posts=>{
         res.render('admin/posts/my-posts',{posts : posts});
