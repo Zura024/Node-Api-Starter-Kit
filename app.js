@@ -13,7 +13,7 @@ const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 const flash = require('connect-flash');
-const {mongoDbUrl} = require('./config/database');
+require('./config/config');
 
 const passport = require('passport');
 
@@ -21,7 +21,7 @@ const passport = require('passport');
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(mongoDbUrl).then(()=>{
+mongoose.connect(process.env.MongoDburl).then(()=>{
     console.log('DB Connected');
 }).catch(err=>{
     console.log(err);
