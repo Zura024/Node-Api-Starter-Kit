@@ -10,7 +10,6 @@ router.get('/projects/:id', getProjectById);
 router.post('/projects', createProject);
 router.put('/projects/:id', updateProject);
 router.delete('/projects/:id', deleteProject);
-router.post('/projects/mark-stable/:domainId', markStable);
 
 async function createProject(req, res, next) {
   try {

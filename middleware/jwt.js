@@ -20,7 +20,7 @@ async function isRevoked(req, payload, done) {
     return done(null, true);
   }
 
-  const session = require('continuation-local-storage').createNamespace('screenshotProject');
+  const session = require('continuation-local-storage').createNamespace('projectName');
   session.active = {};
   session.set('user', user);
 

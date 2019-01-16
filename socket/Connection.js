@@ -1,4 +1,3 @@
-const {Generator} = require('qa-screenshot-comparator');
 const path = require('path');
 const stringHelper = require('./../helpers/stringHelper');
 const models = require('../db/models');
