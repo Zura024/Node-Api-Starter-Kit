@@ -8,11 +8,11 @@
       "https://www.yourproductiondomain.com"
     ],
     "db": {
-      "username": "root",
+      "username": "",
       "password": "",
-      "database": "screenshot_manager",
-      "host": "localhost",
-      "dialect": "mysql",
+      "database": "",
+      "host": "",
+      "dialect": "",
       "define": {
         "timestamps": true,
         "freezeTableName": true,
@@ -30,11 +30,11 @@
       "https://www.yourproductiondomain.com"
     ],
     "db": {
-      "username": "root",
+      "username": "",
       "password": "",
-      "database": "screenshot_manager",
-      "host": "localhost",
-      "dialect": "mysql",
+      "database": "",
+      "host": "",
+      "dialect": "",
       "define": {
         "timestamps": true,
         "freezeTableName": true,

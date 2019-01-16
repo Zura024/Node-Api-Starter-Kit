@@ -1,69 +1,51 @@
-const express = require('express');
-const app = express();
-const mongoose = require('mongoose');
+let express = require('express');
+let app = express();
+const config = require('./config');
+let BaseModule = require('./modules');
+require('./db');
+const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
+let http = require('http');
+app.set('port', port);
+
+let server = http.createServer(app);
+let io = require('socket.io')(server);
+
+// Initialize all available modules
+const modules = BaseModule.init(app);
+let SocketIo = require('./socket/SocketIo');
+const mySocketIo = new SocketIo(io);
+
+const jwt = require('./middleware/jwt');
+
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+const cors = require('cors');
+const errorHandler = require('./middleware/error-handler');
 const bodyParser = require('body-parser');
-const path = require('path');
-const exphbs = require('express-handlebars');
-const home = require('./routes/home/index');
-const auth = require('./routes/auth/auth');
-const admin = require('./routes/admin/index');
-const posts = require('./routes/admin/posts');
-const categories = require('./routes/admin/categories');
-const methodOverride = require('method-override');
-const fileUpload = require('express-fileupload');
-const session = require('express-session');
-const flash = require('connect-flash');
-require('./config/config');
 
-const passport = require('passport');
-
-
-
-mongoose.Promise = global.Promise;
-
-mongoose.connect(process.env.MongoDburl).then(()=>{
-    console.log('DB Connected');
-}).catch(err=>{
-    console.log(err);
-});
-app.use(fileUpload());
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(bodyParser.json());
-
+//Implementing middleware
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-const {select, GenerateTime,paginate} = require('./helpers/handlebars-helpers');
-
-app.engine('handlebars', exphbs({defaultLayout: 'home',helpers:{select : select, GenerateTime:GenerateTime, paginate:paginate}}));
-app.set('view engine','handlebars');
-
-
-app.use(methodOverride('_method'));
-
-app.use(session({
-    secret: 'nodetut',
-    resave: true,
-    saveUninitialized: true,
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(cors({
+  origin: config.allowReferrers,
+  optionsSuccessStatus: 200
 }));
 
-app.use(flash());
+// Use JWT auth to secure the api
+app.use(jwt());
 
-app.use(passport.initialize());
-app.use(passport.session());
+//Register routes
+BaseModule.initRouters();
 
-app.use((req,res,next)=>{
-    res.locals.user = req.user || null;
-    res.locals.success_message = req.flash('success_message');
-    next();
-});
+// Catching errors
+app.use(errorHandler);
 
-app.use('/', home);
-app.use('/auth', auth);
-app.use('/admin', admin);
-app.use('/admin/posts', posts);
-app.use('/admin/categories', categories);
-
-const port = process.env.PORT || 9999;
-app.listen(port, () => {
-    console.log(`app liste ${port} Port`);
+server.listen(port, function () {
+  console.log('Server listening on port ' + port);
 });
