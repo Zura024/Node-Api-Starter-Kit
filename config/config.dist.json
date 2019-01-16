@@ -1,0 +1,47 @@
+{
+  "env": "development",
+  "development": {
+    "allowReferrers": [
+      "http://localhost:8080",
+      "http://localhost:8081",
+      "http://localhost",
+      "https://www.yourproductiondomain.com"
+    ],
+    "db": {
+      "username": "root",
+      "password": "",
+      "database": "screenshot_manager",
+      "host": "localhost",
+      "dialect": "mysql",
+      "define": {
+        "timestamps": true,
+        "freezeTableName": true,
+        "operatorsAliases": false,
+        "underscored": true
+      }
+    },
+    "secret": "secret333"
+  },
+  "production": {
+    "allowReferrers": [
+      "http://localhost:8080",
+      "http://localhost:8081",
+      "http://localhost",
+      "https://www.yourproductiondomain.com"
+    ],
+    "db": {
+      "username": "root",
+      "password": "",
+      "database": "screenshot_manager",
+      "host": "localhost",
+      "dialect": "mysql",
+      "define": {
+        "timestamps": true,
+        "freezeTableName": true,
+        "operatorsAliases": false,
+        "underscored": true
+      }
+    },
+    "secret": "secret333"
+  }
+}
